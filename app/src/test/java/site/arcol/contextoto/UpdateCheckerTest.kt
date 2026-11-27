@@ -2,10 +2,12 @@ package site.arcol.contextoto
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.IOException
 
 class UpdateCheckerTest {
     @Test fun comparesSemanticVersions() {
@@ -29,14 +31,27 @@ class UpdateCheckerTest {
     }
 
     @Test fun prereleaseCanBeSelectedForInAppUpdates() {
-        fun release(tag: String) = JSONObject().put("tag_name", tag)
-            .put("html_url", "https://github.com/GYPp1us/ContextoTO/releases/tag/v$tag")
-            .put("assets", JSONArray().put(JSONObject().put("name", "app-release.apk")
-                .put("browser_download_url", "https://github.com/GYPp1us/ContextoTO/releases/download/v$tag/app-release.apk")
-                .put("digest", "sha256:${"a".repeat(64)}")))
         val releases = JSONArray().put(release("0.4.1")).put(release("1.0.0-rc1"))
         val selected = selectRelease(releases, "0.4.1")
         assertEquals("1.0.0-rc1", selected.latest)
         assertTrue(selected.available)
     }
+
+    @Test fun updateAssetsCanUseEitherRepositoryName() {
+        for (repositoryName in listOf("ContexTo", "ContextoTO")) {
+            val update = parseRelease(release("1.0.0-rc8", repositoryName), "1.0.0-rc7")
+            assertTrue(update.available)
+            assertEquals("https://github.com/GYPp1us/$repositoryName/releases/download/v1.0.0-rc8/app-release.apk", update.apkUrl)
+        }
+        assertThrows(IOException::class.java) {
+            parseRelease(release("1.0.0-rc8", "ContexTo-copy"), "1.0.0-rc7")
+        }
+    }
+
+    private fun release(tag: String, repositoryName: String = "ContexTo") =
+        JSONObject().put("tag_name", tag)
+            .put("html_url", "https://github.com/GYPp1us/$repositoryName/releases/tag/v$tag")
+            .put("assets", JSONArray().put(JSONObject().put("name", "app-release.apk")
+                .put("browser_download_url", "https://github.com/GYPp1us/$repositoryName/releases/download/v$tag/app-release.apk")
+                .put("digest", "sha256:${"a".repeat(64)}")))
 }

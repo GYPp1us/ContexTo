@@ -352,7 +352,7 @@ private fun ChoiceSetting(label: String, chosen: Boolean, colors: Palette, selec
     Row(Modifier.fillMaxWidth().padding(bottom = 4.dp).background(colors.word.copy(alpha = if (chosen) .13f else .025f))
         .clickable(onClick = select).padding(horizontal = 12.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(label, Modifier.weight(1f), color = if (chosen) colors.word else colors.ink, fontSize = 14.sp)
-        if (chosen) Text("✓", color = colors.word, fontSize = 15.sp)
+        if (chosen) BrandGlyph(R.drawable.brand_check, colors.word, size = 18.dp, description = "已选中")
     }
 }
 
@@ -407,7 +407,7 @@ private fun ModelPicker(name: String, baseUrl: String, keyInput: String, selecte
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(option.name, Modifier.weight(1f), color = if (selected == option.id) colors.word else colors.ink,
                                 fontSize = 14.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
-                            if (selected == option.id) Text("✓", color = colors.word, fontSize = 15.sp)
+                            if (selected == option.id) BrandGlyph(R.drawable.brand_check, colors.word, size = 18.dp, description = "已选中")
                         }
                         if (option.name != option.id) Text(option.id, color = colors.muted, fontSize = 11.sp, modifier = Modifier.padding(top = 4.dp))
                     }

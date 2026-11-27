@@ -68,7 +68,7 @@ internal fun BankManagementSection(bank: WordBank, content: Content, learning: L
                 }
             }
             JumpLink(if (working) "正在处理…" else "导出当前词库 · CSV", colors, Modifier.fillMaxWidth(), enabled = !working) {
-                exporter.launch("ContextoTO-${bank.id.take(36)}-words.csv")
+                exporter.launch("ContexTo-${bank.id.take(36)}-words.csv")
             }
             if (bank.id !in setOf("builtin", "general")) {
                 SettingInput("词库名称", name, colors, onChange = { name = it })

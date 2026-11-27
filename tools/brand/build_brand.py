@@ -1,4 +1,4 @@
-"""Generate every contexTO brand asset from one geometry source.
+"""Generate every ContexTo brand asset from one geometry source.
 
     python tools/brand/build_brand.py            # writes app/src/main/res/... and docs/brand/*.svg
 
@@ -134,7 +134,7 @@ write(f"{RES}/mipmap-anydpi/ic_launcher_round.xml", adaptive)
 # splash: matches the app's own paper / dark paper so there is no white flash before Compose draws
 theme = '''<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.ContextoTO" parent="@android:style/Theme.Material.Light.NoActionBar">
+    <style name="Theme.ContexTo" parent="@android:style/Theme.Material.Light.NoActionBar">
         <item name="android:windowBackground">@color/contexto_paper</item>
         <item name="android:windowSplashScreenBackground">@color/contexto_paper</item>
     </style>
@@ -153,7 +153,7 @@ write(f"{RES}/values-night/colors.xml", f'''<?xml version="1.0" encoding="utf-8"
 
 # ---------------------------------------------------------------- text
 # There is no wordmark: the icon is the only logo. Where the name appears it is plain Tinos Regular, as text.
-NAME = "contexTO"
+NAME = "ContexTo"
 SC = 0.78  # uiSmallCaps ratio used across the app
 
 
@@ -356,9 +356,12 @@ G = {
     "settings": "M3 8H21M3 16H21M15 5V11M8 13V19",
     "download": "M12 4V17M12 17L8 13M5 20H19",
 }
-FILLED = {"radio-on": ('<circle cx="12" cy="12" r="6.25" fill="none" stroke="C" stroke-width="1.5"/><circle cx="12" cy="12" r="3" fill="C"/>'),
+RADIO_OUTLINE = 6.25
+RADIO_DOT = 3
+RADIO_RING = f'<circle cx="12" cy="12" r="{RADIO_OUTLINE}" fill="none" stroke="C" stroke-width="1.5"/>'
+FILLED = {"radio-on": RADIO_RING + f'<circle cx="12" cy="12" r="{RADIO_DOT}" fill="C"/>',
           "review": ('<path d="M3.75 7.75H16.25V20.25H3.75ZM7.75 3.75H20.25V16.25" fill="none" stroke="C" stroke-width="1.5"/><rect x="6.5" y="13" width="7" height="2" fill="C"/>'),
-          "radio-off": '<circle cx="12" cy="12" r="6.25" fill="none" stroke="C" stroke-width="1.5"/>'}
+          "radio-off": RADIO_RING}
 ZH = {"menu": "目录", "back": "返回", "forward": "前往", "refresh": "重新生成", "bookmark": "书签", "flag": "纠错",
       "check": "完成", "close": "关闭", "settings": "设置", "download": "下载更新", "review": "复习",
       "radio-on": "选中", "radio-off": "未选"}
@@ -374,6 +377,29 @@ def glyph_files():
     for name in list(G) + list(FILLED):
         write(f"{BR}/glyphs/{name}.svg",
               f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">{glyph_body(name, "currentColor")}</svg>')
+
+
+def stroke_path(path_data):
+    return f"""    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="butt"
+        android:strokeLineJoin="miter"
+        android:pathData="{path_data}" />"""
+
+
+def circle_path(radius):
+    left, right = 12 - radius, 12 + radius
+    return f"M{left} 12A{radius} {radius} 0 1 0 {right} 12A{radius} {radius} 0 1 0 {left} 12Z"
+
+
+def android_glyphs():
+    for name in ("menu", "refresh", "flag", "check"):
+        write(f"{RES}/drawable/brand_{name}.xml", vd([stroke_path(G[name])], w=24, h=24))
+    ring = stroke_path(circle_path(RADIO_OUTLINE))
+    write(f"{RES}/drawable/brand_radio_off.xml", vd([ring], w=24, h=24))
+    dot = vpath(circle_path(RADIO_DOT), "#FFFFFFFF")
+    write(f"{RES}/drawable/brand_radio_on.xml", vd([ring, dot], w=24, h=24))
 
 
 def glyph_sheet():
@@ -400,6 +426,7 @@ write(f"{BR}/palette.svg", palette_sheet())
 write(f"{BR}/type-scale-light.svg", type_sheet(LIGHT))
 write(f"{BR}/type-scale-dark.svg", type_sheet(DARK))
 glyph_files()
+android_glyphs()
 write(f"{BR}/glyphs.svg", glyph_sheet())
 
 print("brand assets written to", OUT)

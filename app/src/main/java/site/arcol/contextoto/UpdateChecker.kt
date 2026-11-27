@@ -69,9 +69,10 @@ internal fun parseRelease(json: JSONObject, current: String): UpdateInfo {
     val digest = asset?.optString("digest").orEmpty()
     val sha256 = digest.removePrefix("sha256:")
     if (compareVersions(tag, current) > 0) {
-        if (!apkUrl.startsWith("https://github.com/GYPp1us/ContextoTO/releases/download/") ||
-            !apkUrl.endsWith("/app-release.apk")
-        ) throw IOException("正式版缺少可下载的 APK")
+        val trustedDownload = apkUrl.startsWith("https://github.com/GYPp1us/ContexTo/releases/download/") ||
+            apkUrl.startsWith("https://github.com/GYPp1us/ContextoTO/releases/download/")
+        if (!trustedDownload || !apkUrl.endsWith("/app-release.apk"))
+            throw IOException("正式版缺少可下载的 APK")
         if (!digest.startsWith("sha256:") || !sha256.matches(Regex("[0-9a-fA-F]{64}")))
             throw IOException("发布信息缺少 APK 校验值")
     }
@@ -104,9 +105,9 @@ object UpdateChecker {
 
     suspend fun check(): UpdateInfo = withContext(Dispatchers.IO) {
         val request = Request.Builder()
-            .url("https://api.github.com/repos/GYPp1us/ContextoTO/releases?per_page=20")
+            .url("https://api.github.com/repos/GYPp1us/ContexTo/releases?per_page=20")
             .header("Accept", "application/vnd.github+json")
-            .header("User-Agent", "ContextoTO-Android/${BuildConfig.VERSION_NAME}")
+            .header("User-Agent", "ContexTo-Android/${BuildConfig.VERSION_NAME}")
             .build()
         val call = client.newCall(request)
         val cancel = currentCoroutineContext().job.invokeOnCompletion { if (it is CancellationException) call.cancel() }
@@ -131,7 +132,7 @@ object UpdateChecker {
             partial.delete()
             ready.delete()
             val request = Request.Builder().url(info.apkUrl)
-                .header("User-Agent", "ContextoTO-Android/${BuildConfig.VERSION_NAME}").build()
+                .header("User-Agent", "ContexTo-Android/${BuildConfig.VERSION_NAME}").build()
             val call = client.newCall(request)
             val cancel = currentCoroutineContext().job.invokeOnCompletion { if (it is CancellationException) call.cancel() }
             var finished = false

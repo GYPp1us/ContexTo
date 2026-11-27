@@ -99,6 +99,7 @@ import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
@@ -108,6 +109,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
@@ -730,8 +732,9 @@ private fun ReaderContent(content: Content, store: UserStore, settings: SecureSe
                 if (viewport.split) {
                     Row(Modifier.fillMaxWidth().heightIn(min = 48.dp).padding(horizontal = readingMargin.dp),
                         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        Text("≡", Modifier.testTag("article-menu-button").quietClickable { drawerOpen = true }.padding(vertical = 8.dp, horizontal = 6.dp),
-                            color = colors.ink, fontSize = 25.sp)
+                        BrandGlyph(R.drawable.brand_menu, colors.ink,
+                            Modifier.testTag("article-menu-button").quietClickable { drawerOpen = true }.padding(vertical = 8.dp, horizontal = 6.dp),
+                            description = "文章目录")
                         Text(smallCapsTitle(article.title, 17f), Modifier.weight(1f), color = colors.ink,
                             fontFamily = ReadingFont, fontSize = 17.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                         Text(article.id.uppercase().take(8), color = colors.muted, fontSize = 11.sp)
@@ -756,8 +759,10 @@ private fun ReaderContent(content: Content, store: UserStore, settings: SecureSe
                         FocusStatusLabel(focusStatus, colors) { focusOpen = true }
                         Spacer(Modifier.weight(1f))
                     } else {
-                        Text("≡", Modifier.testTag("article-menu-button").clickable { drawerOpen = true }.padding(end = 18.dp), color = colors.ink, fontSize = 27.sp)
-                        Text("ContextoTO", color = colors.ink, fontFamily = ReadingFont, fontSize = 19.sp)
+                        BrandGlyph(R.drawable.brand_menu, colors.ink,
+                            Modifier.testTag("article-menu-button").clickable { drawerOpen = true }.padding(end = 18.dp),
+                            description = "文章目录")
+                        Text(stringResource(R.string.app_name), color = colors.ink, fontFamily = ReadingFont, fontSize = 19.sp)
                         Spacer(Modifier.weight(1f))
                         Text(article.id.uppercase(), color = colors.muted, fontSize = 12.sp, fontFamily = ReadingFont)
                     }
@@ -789,7 +794,9 @@ private fun ReaderContent(content: Content, store: UserStore, settings: SecureSe
                     verticalAlignment = Alignment.CenterVertically) {
                     if (!customStatusBar) FocusStatusLabel(focusStatus, colors) { focusOpen = true }
                     if (customStatusBar) {
-                        Text("≡", Modifier.testTag("article-menu-button").clickable { drawerOpen = true }.padding(end = 12.dp), color = colors.ink, fontSize = 23.sp)
+                        BrandGlyph(R.drawable.brand_menu, colors.ink,
+                            Modifier.testTag("article-menu-button").clickable { drawerOpen = true }.padding(end = 12.dp),
+                            description = "文章目录")
                         Text(smallCapsTitle(article.title, 16f), color = colors.ink, fontFamily = ReadingFont,
                             fontSize = 16.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
                         Text(article.id.uppercase().take(8), color = colors.muted, fontSize = 11.sp, modifier = Modifier.padding(start = 8.dp))
@@ -1101,10 +1108,35 @@ internal fun FocusStatusLabel(status: String, colors: Palette, onClick: () -> Un
         status.contains("未配置") -> "专注 · 未配置"
         else -> "专注 · 不可用"
     }
-    Text("${if (active) "●" else "○"} $label", Modifier.clickable(onClick = onClick),
-        color = if (active) colors.word else colors.muted, fontSize = 10.sp)
+    val tint = if (active) colors.word else colors.muted
+    Row(Modifier.clickable(onClick = onClick), verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+        BrandGlyph(if (active) R.drawable.brand_radio_on else R.drawable.brand_radio_off, tint, size = 12.dp)
+        Text(label, color = tint, fontSize = 10.sp)
+    }
 }
 
+
+@Composable
+private fun ProgressStep(
+    label: String,
+    completed: Boolean,
+    active: Boolean,
+    tint: Color,
+    fontSize: TextUnit,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    fontWeight: FontWeight = FontWeight.Normal,
+) {
+    val (glyph, description) = when {
+        completed -> R.drawable.brand_check to "已完成"
+        active -> R.drawable.brand_radio_on to "进行中"
+        else -> R.drawable.brand_radio_off to "等待中"
+    }
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        BrandGlyph(glyph, tint, size = 14.dp, description = description)
+        Text(label, color = tint, fontSize = fontSize, lineHeight = lineHeight, fontWeight = fontWeight)
+    }
+}
 
 private fun readableQueryError(error: Throwable): String = when {
     error is java.net.SocketTimeoutException || error.message?.contains("timeout", ignoreCase = true) == true ->
@@ -1518,7 +1550,8 @@ private fun SentenceSheet(
         RevealElement(0, target) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 UiHeading("SENTENCE / ${if (article.kind == "导入") "LOCAL" else article.id.uppercase()}", colors, Modifier.weight(1f), 11)
-                Text("↻", Modifier.clickable(onClick = onAction).padding(10.dp), color = colors.word, fontSize = 20.sp)
+                BrandGlyph(R.drawable.brand_refresh, colors.word,
+                    Modifier.clickable(onClick = onAction).padding(10.dp), size = 20.dp, description = "重新生成句子解析")
             }
         }
         Spacer(Modifier.height(13.dp))
@@ -1660,8 +1693,12 @@ internal fun WordSheet(
         RevealElement(0, target) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 UiHeading(heading, colors, Modifier.weight(1f), 11)
-                if (onAction != null) Text(if (heading.startsWith("REVIEW")) "⚑" else "↻",
-                    Modifier.clickable(onClick = onAction).padding(10.dp), color = colors.word, fontSize = 20.sp)
+                if (onAction != null) {
+                    val review = heading.startsWith("REVIEW")
+                    BrandGlyph(if (review) R.drawable.brand_flag else R.drawable.brand_refresh, colors.word,
+                        Modifier.clickable(onClick = onAction).padding(10.dp), size = 20.dp,
+                        description = if (review) "报告题目问题" else "重新生成单词解析")
+                }
             }
         }
         Spacer(Modifier.height(8.dp))
@@ -1852,9 +1889,9 @@ internal fun ProgressBlock(progress: QueryProgress?, colors: Palette, label: Str
         }
         Spacer(Modifier.height(13.dp))
         phases.forEachIndexed { index, title ->
-            Text("${if (index < active) "✓" else if (index == active) "●" else "·"}  $title",
-                color = if (index == active) colors.word else colors.muted,
-                fontSize = 12.sp, fontWeight = if (index == active) FontWeight.Bold else FontWeight.Normal)
+            ProgressStep(title, completed = index < active, active = index == active,
+                tint = if (index == active) colors.word else colors.muted, fontSize = 12.sp,
+                fontWeight = if (index == active) FontWeight.Bold else FontWeight.Normal)
         }
         if ((progress?.approximateReasoningTokens ?: 0) > 0) {
             val count = progress?.exactReasoningTokens?.toString() ?: "≈ ${progress?.approximateReasoningTokens}"
@@ -1909,8 +1946,8 @@ private fun UpdateDownloadSheet(
     }, trailing = {
         Spacer(Modifier.height(21.dp))
         listOf("连接发布源", "接收安装包", "校验并准备安装").forEachIndexed { index, title ->
-            Text("${if (index < phaseIndex || ready) "✓" else if (index == phaseIndex) "●" else "·"}  $title",
-                color = if (index == phaseIndex || ready) colors.word else colors.muted,
+            ProgressStep(title, completed = index < phaseIndex || ready, active = index == phaseIndex,
+                tint = if (index == phaseIndex || ready) colors.word else colors.muted,
                 fontSize = 13.sp, lineHeight = 22.sp)
         }
         if (error != null) Text(error, color = colors.paragraph, fontSize = 13.sp,

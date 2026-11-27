@@ -1,9 +1,9 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/brand/banner-dark.svg">
-  <img src="docs/brand/banner-light.svg" alt="contexTO — 词在句中，句在篇中。" width="100%">
+  <img src="docs/brand/banner-light.svg" alt="ContexTo — 词在句中，句在篇中。" width="100%">
 </picture>
 
-# ContextoTO
+# ContexTo
 
 面向中文母语者的安卓篇章英语阅读应用。预置 48 篇考研英语一风格文章，以及 3,000 主背词、4,801 考纲词与 319 零语料词。短按词查看本句义项，长按词查看所在句的整句释义与从句结构；文章目录与查询层均覆盖整页磨砂。
 
@@ -17,13 +17,13 @@
 
 四面板跟随手指位移、限位并按速度吸附，可在归位过程中重新拖动。目录和生词菜单外露的主页面点击收起，整个屏幕均支持横向手势；选新内容使用 10% 缩放的 400ms 卡牌交换。设置位于阅读页左侧、目录下层，保存 / 返回平移回阅读。展开项收起时，下方立即补位；仅当新页面底部不足以维持当前视口时，保留最小页尾余量并由上滑回收，不允许向下扩张。目录固定磨砂顶 / 底栏，无不透明底板、额外滤色或加深阴影；遮挡文字不可点击。箭头入口按压只改字体颜色。UI 标题统一大写衬线加粗 small caps，每个词首字母保留全高。引导前两步居中、可实际操作；返回键逐层关闭演示单词 / 句子，不退出引导本身，句中仍可点词。AI 与降级说明仅在引导外层；演示不联网、不改学习记录。此前实现约定见 [RC6 约定](docs/RC6_REQUIREMENTS.md)，历史验收见 [rc5 记录](docs/INTERACTION_ITERATION.md)。
 
-当前发布：[v1.0.0-rc7](https://github.com/GYPp1us/ContextoTO/releases/tag/v1.0.0-rc7)，更新内容见 [rc7 说明](docs/releases/v1.0.0-rc7.md)。历史版本说明保留，不倒改旧验收记录。
+当前发布为 [ContexTo v1.0.0-rc8](https://github.com/GYPp1us/ContexTo/releases/tag/v1.0.0-rc8)，更新内容见 [rc8 说明](docs/releases/v1.0.0-rc8.md)。旧版本用户可下载签名版 APK 覆盖安装。
 
 ## 开发
 
 图标、色彩、字号层级与宣传图见 [美术与品牌规范](docs/ART_DIRECTION.md)，资产由 `tools/brand/build_brand.py` 生成。
 
-横屏使用统一的可用窗口版式：紧凑单行顶栏、连贯单栏阅读，解析与复习按内容角色分区；大字号或窄窗口自然回落到单列。旋转保留面板、查询浮层、当前题目和设置草稿，并按字符锚点恢复阅读位置。安全区统一避让左右挖孔与导航栏，过渡坐标随重排更新。实现与截图验收见 [横屏审查说明](docs/LANDSCAPE_REVIEW.md)。本改动仅提 PR，不改变 rc7 版本号或发布标签。
+横屏使用统一的可用窗口版式：紧凑单行顶栏、连贯单栏阅读，解析与复习按内容角色分区；大字号或窄窗口自然回落到单列。旋转保留面板、查询浮层、当前题目和设置草稿，并按字符锚点恢复阅读位置。安全区统一避让左右挖孔与导航栏，过渡坐标随重排更新。实现与截图验收见 [横屏审查说明](docs/LANDSCAPE_REVIEW.md)。
 
 需要 JDK 17+、Android SDK API 36、Android SDK Build Tools 36、Python 3.10+。构建使用 Gradle Wrapper：
 

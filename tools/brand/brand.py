@@ -1,4 +1,4 @@
-"""contexTO brand toolkit: palette, glyph outlines, sentence-contour geometry."""
+"""ContexTo brand toolkit: palette, glyph outlines, sentence-contour geometry."""
 import math
 import os
 from fontTools.ttLib import TTFont

@@ -2,7 +2,7 @@
 
 `build_brand.py` 从同一份图标几何与调色板生成：
 
-- `app/src/main/res/` 中的自适应图标、单色主题图标、启动画面颜色与主题；
+- `app/src/main/res/` 中的自适应图标、单色主题图标、启动画面颜色与主题，以及应用内使用的字形；
 - `docs/brand/` 中的全部 SVG（图标、横幅、社交预览、特色图、调色板、字号层级、界面字形）。
 
 规范说明见 [docs/ART_DIRECTION.md](../../docs/ART_DIRECTION.md)。

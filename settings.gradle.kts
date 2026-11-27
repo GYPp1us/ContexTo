@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "ContextoTO"
+rootProject.name = "ContexTo"
 include(":app")
