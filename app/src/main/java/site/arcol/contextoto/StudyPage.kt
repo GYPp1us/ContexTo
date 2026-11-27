@@ -212,7 +212,9 @@ internal fun StudyPage(content: Content, learning: LearningStore, engine: Analys
                 StudyWordText(percent, 14f, colors, percentDestination != null && (progressOpen || percentMotion.value > .001f),
                     Modifier.quietClickable { percentFlightText = percent; percentFlightSource = percentSource; percentDestination = null; progressOpen = true }
                         .padding(vertical = 12.dp), onGlyph = { percentSource = it }, ink = colors.word)
-                Text("≡", Modifier.testTag("study-menu-button").quietClickable { onMenu(true) }.padding(vertical = 8.dp, horizontal = 6.dp), color = colors.ink, fontSize = 25.sp)
+                BrandGlyph(R.drawable.brand_menu, colors.ink,
+                    Modifier.testTag("study-menu-button").quietClickable { onMenu(true) }.padding(vertical = 8.dp, horizontal = 6.dp),
+                    description = "生词菜单")
             } else {
             Row(Modifier.fillMaxWidth().heightIn(min = cutoutHeight.coerceAtLeast(24.dp)).padding(horizontal = 24.dp, vertical = 2.dp), verticalAlignment = Alignment.CenterVertically) {
                 FocusStatusLabel(focusStatus, colors, onFocus)
@@ -224,7 +226,9 @@ internal fun StudyPage(content: Content, learning: LearningStore, engine: Analys
             Row(Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 12.dp, bottom = 20.dp), verticalAlignment = Alignment.CenterVertically) {
                 UiHeading(mode, colors, Modifier.weight(1f), 25)
                 Text("生词  /  ${state.count { !it.archived }}", color = colors.muted, fontSize = 11.sp)
-                Text("≡", Modifier.testTag("study-menu-button").clickable { onMenu(true) }.padding(start = 16.dp), color = colors.ink, fontSize = 25.sp)
+                BrandGlyph(R.drawable.brand_menu, colors.ink,
+                    Modifier.testTag("study-menu-button").clickable { onMenu(true) }.padding(start = 16.dp),
+                    description = "生词菜单")
             }
             }
             }

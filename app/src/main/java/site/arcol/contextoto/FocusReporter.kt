@@ -92,7 +92,7 @@ object FocusReporter {
         val request = Request.Builder().url("$base/frame")
             .post(body.toString().toRequestBody("application/json; charset=utf-8".toMediaType())).build()
         return execute(request).use { response ->
-            if (BuildConfig.DEBUG) Log.d("ContextoTOFocus", "$state HTTP ${response.code}")
+            if (BuildConfig.DEBUG) Log.d("ContexToFocus", "$state HTTP ${response.code}")
             response.code
         }
     }

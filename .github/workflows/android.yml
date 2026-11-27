@@ -34,7 +34,7 @@ jobs:
         run: ./gradlew testDebugUnitTest assembleDebug assembleDebugAndroidTest lintDebug --no-daemon
       - uses: actions/upload-artifact@v4
         with:
-          name: ContextoTO-debug
+          name: ContexTo-debug
           path: |
             app/build/outputs/apk/debug/app-debug.apk
             app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
@@ -61,4 +61,4 @@ jobs:
         run: |
           release_flags=()
           if [[ "${GITHUB_REF_NAME}" == *-* ]]; then release_flags+=(--prerelease); fi
-          gh release create "${GITHUB_REF_NAME}" app/build/outputs/apk/release/app-release.apk --title "ContextoTO ${GITHUB_REF_NAME}" --generate-notes "${release_flags[@]}"
+          gh release create "${GITHUB_REF_NAME}" app/build/outputs/apk/release/app-release.apk --title "ContexTo ${GITHUB_REF_NAME}" --generate-notes "${release_flags[@]}"

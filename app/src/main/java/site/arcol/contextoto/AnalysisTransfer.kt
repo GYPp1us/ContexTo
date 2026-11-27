@@ -56,10 +56,10 @@ internal fun AnalysisTransferOverlay(content: Content, store: UserStore, engine:
             fontSize = 13.sp, lineHeight = 21.sp, modifier = Modifier.padding(top = 18.dp, bottom = 22.dp))
         if (working) ProgressBlock(null, colors, "本地解析包处理 · 不请求模型")
         JumpLink("导出当前文章", colors, Modifier.fillMaxWidth(), enabled = !working) {
-            targets = listOf(current); exporter.launch("ContextoTO-${current.id}-analyses.zip")
+            targets = listOf(current); exporter.launch("ContexTo-${current.id}-analyses.zip")
         }
         JumpLink("导出全部文章", colors, Modifier.fillMaxWidth(), enabled = !working) {
-            targets = content.articles.toList(); exporter.launch("ContextoTO-all-analyses.zip")
+            targets = content.articles.toList(); exporter.launch("ContexTo-all-analyses.zip")
         }
         JumpLink("导入解析包", colors, Modifier.fillMaxWidth().padding(top = 12.dp), enabled = !working) {
             importer.launch(arrayOf("application/zip", "application/octet-stream"))

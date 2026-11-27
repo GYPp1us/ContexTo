@@ -7,15 +7,18 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -107,9 +110,12 @@ internal fun ImportOverlay(vocabulary: Boolean, content: Content, learning: Lear
             if (vocabulary || plan.articles.size == 1) SettingInput(if (vocabulary) "词库名称" else "文章标题", name, colors, onChange = { name = it })
             if (vocabulary) {
                 UiHeading("DESTINATION", colors, Modifier.padding(top = 20.dp), 12)
-                Text("${if (bankId == null) "●" else "○"} 新建词库", Modifier.fillMaxWidth().clickable { bankId = null }.padding(vertical = 13.dp), color = colors.word, fontSize = 14.sp)
+                BankDestination("新建词库", bankId == null, colors.word, 13.dp) { bankId = null }
                 content.banks.filter { it.id !in setOf("builtin", "general") }.forEach { bank ->
-                    Text("${if (bankId == bank.id) "●" else "○"} 合并到 ${bank.name}", Modifier.fillMaxWidth().clickable { bankId = bank.id; name = bank.name }.padding(vertical = 12.dp), color = colors.ink, fontSize = 14.sp)
+                    BankDestination("合并到 ${bank.name}", bankId == bank.id, colors.ink, 12.dp) {
+                        bankId = bank.id
+                        name = bank.name
+                    }
                 }
                 Text("词库不会自动进入复习；同词多库保留各自释义。", color = colors.muted, fontSize = 12.sp, lineHeight = 20.sp)
             }
@@ -283,5 +289,15 @@ internal fun GuideOverlay(step: Int, content: Content, colors: Palette, top: Dp,
         val anchor = sources.firstOrNull { it.token.start == displayedWord.token.start } ?: displayedWord.anchor
         MotionGlyphs(listOf(anchor), listOf(wordDestination!!), wordMotion.value, wordTarget != null)
     }
+    }
+}
+
+@Composable
+private fun BankDestination(label: String, selected: Boolean, tint: Color, padding: Dp, onClick: () -> Unit) {
+    Row(Modifier.fillMaxWidth().selectable(selected, role = Role.RadioButton, onClick = onClick)
+        .padding(vertical = padding),
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        BrandGlyph(if (selected) R.drawable.brand_radio_on else R.drawable.brand_radio_off, tint, size = 18.dp)
+        Text(label, color = tint, fontSize = 14.sp)
     }
 }

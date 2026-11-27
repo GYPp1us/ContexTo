@@ -1,7 +1,7 @@
-# contexTO · 美术与品牌规范
+# ContexTo · 美术与品牌规范
 
 <p>
-  <img src="brand/banner-light.svg" alt="contexTO 横幅（明）" width="100%">
+  <img src="brand/banner-light.svg" alt="ContexTo 横幅（明）" width="100%">
 </p>
 
 **词在句中，句在篇中。** 这套规范不另起一种风格，而是把阅读页已有的视觉语言整理成一个系统：Tinos 衬线正文、每词首字母全高的 small caps 标题、低饱和的纸 / 墨 / 松绿 / 陶土，以及沿句子逐行包裹的「跟随书签」轮廓。图标、宣传图和界面字形都从这几样东西里长出来。
@@ -46,7 +46,7 @@ Android 12+ 的系统启动画面使用上面的图标，背景取 `@color/conte
 
 ## 3. 名称
 
-品牌名写作 **contexTO**。本规范不设文字标志：图标是唯一的标志，名称出现时按正文排成普通文字（Tinos Regular，保持原有大小写，不做 small caps、不加粗、不改字距）。README 横幅不写名称，由紧随其后的标题承担。
+品牌名写作 **ContexTo**。本规范不设文字标志：图标是唯一的标志，名称出现时按正文排成普通文字（Tinos Regular，保持原有大小写，不做 small caps、不加粗、不改字距）。README 横幅不写名称，由紧随其后的标题承担。
 
 ## 4. 色彩
 
@@ -54,7 +54,7 @@ Android 12+ 的系统启动画面使用上面的图标，背景取 `@color/conte
   <img src="brand/palette.svg" alt="明暗两套调色板及对纸色的对比度" width="100%">
 </p>
 
-调色板与 `MainActivity.kt` 中的 `palette()` 完全一致，本 PR 没有改动任何界面颜色。品牌层面的角色分配：
+调色板与 `MainActivity.kt` 中的 `palette()` 完全一致，界面沿用既有颜色。品牌层面的角色分配：
 
 | 角色 | 用途 |
 |---|---|
@@ -101,7 +101,7 @@ Android 12+ 的系统启动画面使用上面的图标，背景取 `@color/conte
 | — | 36 Headword | 词条标题 |
 | 42 | 42 Display | 大数字、单词浮层原词 |
 
-这只是建议，本 PR 不改任何字号。
+表内字号为后续收敛建议。
 
 **排版规则。**
 
@@ -114,8 +114,8 @@ Android 12+ 的系统启动画面使用上面的图标，背景取 `@color/conte
 
 | 层级 | 资产 | 状态 |
 |---|---|---|
-| L0 系统 | 启动器图标（自适应 + 单色主题图标）、启动画面 | **已接入**（本 PR） |
-| L1 界面 | 书签轮廓、全页磨砂、界面字形 | 轮廓与磨砂沿用现状；字形为提案，见第 7 节 |
+| L0 系统 | 启动器图标（自适应 + 单色主题图标）、启动画面 | **已接入** |
+| L1 界面 | 书签轮廓、全页磨砂、界面字形 | 轮廓与磨砂沿用现状，界面字形见第 7 节 |
 | L2 内容 | 从句四色、词库标识 | 沿用现状 |
 | L3 传播 | README 横幅（明 / 暗）、GitHub 社交预览、商店特色图、512 图标 | 已生成，见下 |
 
@@ -125,19 +125,19 @@ Android 12+ 的系统启动画面使用上面的图标，背景取 `@color/conte
 
 社交预览与商店特色图把图标「放大到能读出字」：图标里的三行词条就是 N01 正文，书签包住的是第二句，陶土色的是 *blockade*。社交预览需要仓库管理员在 **Settings → General → Social preview** 手动上传 [`brand/social-preview.png`](brand/social-preview.png)；特色图 [`brand/feature-graphic.png`](brand/feature-graphic.png) 为 Play 规定的 1024×500。
 
-## 7. 界面字形（提案，未接入）
+## 7. 界面字形
 
 <p>
   <img src="brand/glyphs.svg" alt="界面字形：明暗两套，各 3 种尺寸" width="100%">
 </p>
 
-目前界面里的 `≡` `↻` `⚑` `●` `○` `✓` 是系统字体中的字符，粗细和字形随机型变化，和 Tinos 的笔画不协调。这套字形按以下规则绘制，可以一一替换：
+目录、重新生成、纠错、选项和任务进度使用同一组矢量字形，笔画随主题着色。
 
 - 24 dp 网格，1.5 dp 线宽，平头端点、尖角连接，与正文字重相当。
 - 箭头只画上半支箭羽，与现有 `JumpLink` 的下划线箭头同一做法。
 - 只用 `ink` / `word` 着色，不填充底板。
 
-单个 SVG 在 [`brand/glyphs/`](brand/glyphs/)。接入需要把 `Text("≡")` 等换成 `Icon(painterResource(...))`，同时保留 `testTag` 与点按区域。这会改动交互代码，所以留给后续 PR，等确认方向后再做。
+[字形 SVG](brand/glyphs/) 与应用内的 Android 矢量资源由同一脚本生成。图标按钮提供操作说明，导入选项提供选中状态。
 
 ## 8. 资产清单
 
@@ -145,6 +145,7 @@ Android 12+ 的系统启动画面使用上面的图标，背景取 `@color/conte
 |---|---|
 | `app/src/main/res/mipmap-anydpi/ic_launcher*.xml` | 自适应图标 |
 | `app/src/main/res/drawable/ic_launcher_{foreground,monochrome}.xml` | 图标前景 / 单色层 |
+| `app/src/main/res/drawable/brand_*.xml` | 应用内字形 |
 | `app/src/main/res/values{,-night}/colors.xml`、`values/themes.xml` | 启动画面与窗口底色 |
 | `docs/brand/icon*.svg`、`icon-play-512.png` | 图标母版与商店图 |
 | `docs/brand/banner-*.svg` | README 横幅（随 GitHub 明暗切换） |
